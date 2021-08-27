@@ -1,0 +1,7 @@
+[
+    {
+        "cmd": "kubectl apply -k https://github.com/stakater/Reloader/deployments/kubernetes",
+        "name": "Reloader",
+        "desc": "用于在无法自动监测配置文件改动的Deployment中，自动监测ConfigMap/Secret的变化并重启Pod，以更新配置"
+    }
+]
