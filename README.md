@@ -5,3 +5,9 @@ Using different programming languages and different frameworks, it may looks lik
 Because my poor in English, most documents and commonds will be in Chinese only.
 
 It's still developing.
+
+
+# Submodules
+
+* [UserCenter](https://github.com/SnowPhoenix0105/ToolSetUserCenter)
+* [EncodeTransformer](https://github.com/SnowPhoenix0105/ToolSetEncodeTransformer)
