@@ -1,0 +1,292 @@
+{
+    "openapi": "3.0.1",
+    "info": {
+      "title": "UserCenter",
+      "description": "",
+      "version": "1.0.0"
+    },
+    "tags": [
+      {
+        "name": "默认分类"
+      }
+    ],
+    "paths": {
+      "/temp/create": {
+        "post": {
+          "summary": "创建临时用户",
+          "description": "创建一个临时用户，临时用户的有效期和refreshToken的有效期一致，可以使用更新refreshToken的接口延长有效期。",
+          "tags": [
+            "默认分类"
+          ],
+          "parameters": [],
+          "responses": {
+            "200": {
+              "description": "成功",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "refreshToken": {
+                        "type": "string",
+                        "title": "刷新凭证",
+                        "description": "用户的登录凭证，可用于获取新的访问凭证",
+                        "minLength": 20
+                      },
+                      "refreshExpireString": {
+                        "type": "string",
+                        "title": "刷新凭证过期时间字符串",
+                        "description": "刷新凭证失效的时间，是一个时间点，便于阅读，用于调试"
+                      },
+                      "refreshExpire": {
+                        "type": "integer",
+                        "title": "刷新凭证失效时间戳",
+                        "description": "刷新凭证失效的时间，是一个时间点"
+                      },
+                      "accessToken": {
+                        "type": "string",
+                        "title": "访问凭证",
+                        "description": "用户登录的凭证，用于访问各个服务",
+                        "minLength": 20
+                      },
+                      "accessExpireString": {
+                        "type": "string",
+                        "title": "访问凭证过期时间字符串",
+                        "description": "访问凭证失效的时间，是一个时间点，用于调试"
+                      },
+                      "accessExpire": {
+                        "type": "integer",
+                        "title": "访问凭证过期时间戳",
+                        "description": "访问凭证失效的时间，是一个时间点"
+                      },
+                      "auth": {
+                        "type": "string",
+                        "title": "用户的权限等级",
+                        "description": "auth表示管理员，user表示用户，passerby表示游客，权限一次降低"
+                      }
+                    },
+                    "required": [
+                      "refreshToken",
+                      "auth",
+                      "accessToken",
+                      "refreshExpire",
+                      "accessExpire"
+                    ]
+                  },
+                  "examples": {
+                    "1": {
+                      "summary": "成功示例",
+                      "value": {
+                        "refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiIxMTQ1MTQiLCJleHAiOjE2NDYyOTkwMjJ9.rlKXrRF2w5IgzSaE7nECyULfPYs8Mi5yIVJ2wxvQp2I",
+                        "refreshExpireString": "2022-03-03 17:17:02",
+                        "refreshExpire": 1646299022,
+                        "accessToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiIxMTQ1MTQiLCJleHAiOjE2NDYyODkwMjIsImF1dGgiOjB9.PWvJ8kyqOv2GNk0Vgfmb3A7xg2Q7bzyOnWSliktJLnw",
+                        "accessExpireString": "2022-03-03 14:30:22",
+                        "accessExpire": 1646289022,
+                        "auth": "passerby"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/token/refresh": {
+        "post": {
+          "summary": "更新refreshToken",
+          "description": "使用旧有的、未超时的refreshToken换取新的refreshToken，如果是临时账户，还会延长账户的有效期。调用此接口后，旧的refreshToken仍旧有效，直至token过期。",
+          "tags": [
+            "默认分类"
+          ],
+          "parameters": [],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "refreshToken": {
+                      "type": "string",
+                      "minLength": 20,
+                      "title": "旧刷新凭证",
+                      "description": "旧有的刷新凭证，必须保证未过期"
+                    }
+                  },
+                  "required": [
+                    "refreshToken"
+                  ]
+                },
+                "example": {
+                  "refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiIxMTQ1MTQiLCJleHAiOjE1MTYyMzkwMjJ9.qZwekidfW8iNH9V_WHBg8HmwnSsJD7jAtw8KqGeHwvk"
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "成功",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "refreshToken": {
+                        "type": "string",
+                        "title": "刷新凭证",
+                        "description": "用户的登录凭证，可用于获取新的访问凭证",
+                        "minLength": 20
+                      },
+                      "refreshExpireString": {
+                        "type": "string",
+                        "title": "刷新凭证过期时间",
+                        "description": "刷新凭证失效的时间，是一个时间点，便于阅读，用于调试"
+                      },
+                      "refreshExpire": {
+                        "type": "integer",
+                        "title": "刷新凭证过期时间",
+                        "description": "刷新凭证失效的时间，是一个时间点"
+                      },
+                      "auth": {
+                        "type": "string",
+                        "title": "用户的权限等级",
+                        "description": "auth表示管理员，user表示用户，passerby表示游客，权限一次降低"
+                      }
+                    },
+                    "required": [
+                      "refreshToken",
+                      "auth",
+                      "refreshExpire"
+                    ]
+                  },
+                  "examples": {
+                    "1": {
+                      "summary": "成功示例",
+                      "value": {
+                        "refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiIxMTQ1MTQiLCJleHAiOjE1MTYyMzkwMjJ9.qZwekidfW8iNH9V_WHBg8HmwnSsJD7jAtw8KqGeHwvk",
+                        "auth": "passerby",
+                        "refreshExpireString": "2022-03-03 17:17:02",
+                        "refreshExpire": 1646299022
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "401": {
+              "description": "没有权限",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {}
+                  },
+                  "examples": {}
+                }
+              }
+            }
+          }
+        }
+      },
+      "/token/access": {
+        "post": {
+          "summary": "获取accessToken",
+          "description": "使用refreshToken获取accessToken。",
+          "tags": [
+            "默认分类"
+          ],
+          "parameters": [],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "refreshToken": {
+                      "type": "string",
+                      "minLength": 20,
+                      "title": "刷新凭证",
+                      "description": "刷新凭证，必须保证未过期"
+                    }
+                  },
+                  "required": [
+                    "refreshToken"
+                  ]
+                },
+                "example": {
+                  "refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiIxMTQ1MTQiLCJleHAiOjE1MTYyMzkwMjJ9.qZwekidfW8iNH9V_WHBg8HmwnSsJD7jAtw8KqGeHwvk"
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "成功",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "accessToken": {
+                        "type": "string",
+                        "title": "访问凭证",
+                        "description": "用户登录的凭证，用于访问各个服务",
+                        "minLength": 20
+                      },
+                      "accessExpireString": {
+                        "type": "string",
+                        "title": "访问凭证过期时间字符串",
+                        "description": "访问凭证失效的时间，是一个时间点，用于调试"
+                      },
+                      "accessExpire": {
+                        "type": "integer",
+                        "title": "访问凭证过期时间戳",
+                        "description": "访问凭证失效的时间，是一个时间点"
+                      },
+                      "auth": {
+                        "type": "string",
+                        "title": "用户的权限等级",
+                        "description": "auth表示管理员，user表示用户，passerby表示游客，权限一次降低"
+                      }
+                    },
+                    "required": [
+                      "auth",
+                      "accessToken",
+                      "accessExpire"
+                    ]
+                  },
+                  "examples": {
+                    "1": {
+                      "summary": "成功示例",
+                      "value": {
+                        "accessToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiIxMTQ1MTQiLCJleHAiOjE2NDYyODkwMjIsImF1dGgiOjB9.PWvJ8kyqOv2GNk0Vgfmb3A7xg2Q7bzyOnWSliktJLnw",
+                        "accessExpireString": "2022-03-03 14:30:22",
+                        "accessExpire": 1646289022,
+                        "auth": "passerby"
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "401": {
+              "description": "没有权限",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {}
+                  },
+                  "examples": {}
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "components": {
+      "schemas": {}
+    }
+  }
