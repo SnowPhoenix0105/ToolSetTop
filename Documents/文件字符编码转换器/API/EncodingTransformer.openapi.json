@@ -1,384 +1,515 @@
 {
-    "openapi": "3.0.1",
-    "info": {
-      "title": "EncodeTransformer",
-      "description": "",
-      "version": "1.0.0"
+  "openapi": "3.0.1",
+  "info": {
+    "title": "EncodeTransformer",
+    "description": "",
+    "version": "1.0.0"
+  },
+  "tags": [
+    {
+      "name": "默认分类"
     },
-    "tags": [
-      {
-        "name": "默认分类"
-      },
-      {
-        "name": "文件"
-      },
-      {
-        "name": "字符集"
-      },
-      {
-        "name": "编码"
-      }
-    ],
-    "paths": {
-      "/encoding/baseinfo": {
-        "post": {
-          "summary": "设定基础信息",
-          "description": "",
-          "tags": [
-            "编码"
-          ],
-          "parameters": [],
-          "requestBody": {
-            "content": {
-              "application/json": {
-                "schema": {
+    {
+      "name": "文件"
+    },
+    {
+      "name": "字符集"
+    },
+    {
+      "name": "编码"
+    }
+  ],
+  "paths": {
+    "/encoding/modify": {
+      "post": {
+        "summary": "订正编码",
+        "description": "",
+        "tags": [
+          "编码"
+        ],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "",
+            "required": true,
+            "example": "Bearer {{accessToken}}",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
                   "type": "object",
                   "properties": {
-                    "target": {
+                    "fid": {
+                      "type": "integer",
+                      "title": "文件id"
+                    },
+                    "encoding": {
                       "type": "string",
-                      "title": "目标编码",
                       "enum": [
                         "utf8",
-                        "bgk"
+                        "gbk"
                       ],
                       "x-apifox": {
                         "enumDescriptions": {
                           "utf8": "UTF-8编码",
-                          "bgk": "GBK编码"
+                          "gbk": "GBK编码"
                         }
                       }
-                    },
-                    "selected": {
-                      "type": "array",
-                      "items": {
-                        "type": "string"
-                      },
-                      "title": "需要进行转码的文件"
-                    },
-                    "unselected": {
-                      "type": "array",
-                      "items": {
-                        "type": "string"
-                      },
-                      "title": "不需要转码的文件"
-                    },
-                    "charset": {
-                      "type": "array",
-                      "items": {
-                        "type": "integer"
-                      },
-                      "title": "字符集"
                     }
                   },
                   "required": [
-                    "target",
-                    "selected",
-                    "unselected",
-                    "charset"
+                    "fid",
+                    "encoding"
                   ]
                 }
               }
             }
-          },
-          "responses": {
-            "200": {
-              "description": "成功",
-              "content": {
-                "application/json": {
-                  "schema": {
-                    "type": "array",
-                    "items": {
-                      "type": "object",
-                      "properties": {
-                        "name": {
-                          "type": "string",
-                          "title": "文件名"
-                        },
-                        "encoding": {
-                          "type": "string",
-                          "title": "源编码格式",
-                          "enum": [
-                            "utf8",
-                            "gbk"
-                          ],
-                          "x-apifox": {
-                            "enumDescriptions": {
-                              "utf8": "UTF-8编码",
-                              "gbk": "GBK编码"
-                            }
-                          }
-                        }
-                      },
-                      "required": [
-                        "name",
-                        "encoding"
-                      ]
-                    }
-                  },
-                  "examples": {}
-                }
-              }
-            }
           }
-        }
-      },
-      "/file/preview": {
-        "post": {
-          "summary": "预览文件",
-          "description": "",
-          "tags": [
-            "文件"
-          ],
-          "parameters": [],
-          "requestBody": {
+        },
+        "responses": {
+          "200": {
+            "description": "成功",
             "content": {
               "application/json": {
                 "schema": {
                   "type": "object",
-                  "properties": {
-                    "filename": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "filename"
-                  ]
-                }
-              }
-            }
-          },
-          "responses": {
-            "200": {
-              "description": "成功",
-              "content": {
-                "*/*": {
-                  "schema": {
-                    "type": "object",
-                    "properties": {}
-                  },
-                  "examples": {}
-                }
-              }
-            }
-          }
-        }
-      },
-      "/charset/list": {
-        "get": {
-          "summary": "获取全部字符集的列表",
-          "description": "",
-          "tags": [
-            "字符集"
-          ],
-          "parameters": [],
-          "responses": {
-            "200": {
-              "description": "成功",
-              "content": {
-                "application/json": {
-                  "schema": {
-                    "type": "array",
-                    "items": {
-                      "type": "object",
-                      "properties": {
-                        "cid": {
-                          "type": "integer",
-                          "title": "ID",
-                          "description": "字符集ID"
-                        },
-                        "name": {
-                          "type": "string",
-                          "title": "字符集名称"
-                        }
-                      },
-                      "required": [
-                        "cid",
-                        "name"
-                      ]
-                    }
-                  },
-                  "examples": {}
-                }
-              }
-            }
-          }
-        }
-      },
-      "/charset/info": {
-        "get": {
-          "summary": "获取字符集详细信息",
-          "description": "",
-          "tags": [
-            "字符集"
-          ],
-          "parameters": [
-            {
-              "name": "cid",
-              "in": "query",
-              "description": "",
-              "required": true,
-              "example": "1",
-              "schema": {
-                "type": "string"
-              }
-            }
-          ],
-          "responses": {
-            "200": {
-              "description": "成功",
-              "content": {
-                "application/json": {
-                  "schema": {
-                    "type": "object",
-                    "properties": {
-                      "desc": {
-                        "type": "string",
-                        "title": "描述"
-                      },
-                      "set": {
-                        "type": "string",
-                        "title": "字符",
-                        "description": "包含的全部字符"
-                      }
-                    },
-                    "required": [
-                      "desc",
-                      "set"
-                    ]
-                  },
-                  "examples": {}
-                }
-              }
-            }
-          }
-        }
-      },
-      "/file/upload": {
-        "post": {
-          "summary": "上传文件",
-          "description": "似乎暂时无法运行正确的测试",
-          "tags": [
-            "文件"
-          ],
-          "parameters": [
-            {
-              "name": "Content-Type",
-              "in": "header",
-              "description": "",
-              "required": true,
-              "example": "multipart/form-data",
-              "schema": {
-                "type": "string"
-              }
-            }
-          ],
-          "requestBody": {
-            "content": {
-              "multipart/form-data": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "files": {
-                      "type": "string",
-                      "example": [
-                        "file://D:\\Projects\\SnowPhoenix\\Projects\\ToolSetEncodeTransformer\\src\\main\\resources\\static\\files\\gbk.txt",
-                        "file://D:\\Projects\\SnowPhoenix\\Projects\\ToolSetEncodeTransformer\\src\\main\\resources\\static\\files\\sub\\text1.txt"
-                      ],
-                      "format": "binary"
-                    }
-                  },
-                  "required": [
-                    "files"
-                  ]
-                }
-              }
-            }
-          },
-          "responses": {
-            "200": {
-              "description": "成功",
-              "content": {
-                "application/json": {
-                  "schema": {
-                    "type": "object",
-                    "properties": {
-                      "selected": {
-                        "type": "array",
-                        "items": {
-                          "type": "string",
-                          "description": "将被转码的文件"
-                        }
-                      },
-                      "unselected": {
-                        "type": "array",
-                        "items": {
-                          "type": "string",
-                          "description": "将被排除的文件"
-                        }
-                      }
-                    },
-                    "required": [
-                      "selected",
-                      "unselected"
-                    ]
-                  },
-                  "examples": {}
-                }
-              }
-            }
-          }
-        }
-      },
-      "/file/download": {
-        "get": {
-          "summary": "下载全部文件",
-          "description": "",
-          "tags": [
-            "文件"
-          ],
-          "parameters": [],
-          "responses": {
-            "200": {
-              "description": "成功",
-              "content": {
-                "*/*": {
-                  "schema": {
-                    "type": "object",
-                    "properties": {}
-                  },
-                  "examples": {}
-                }
-              }
-            }
-          }
-        }
-      },
-      "/encoding/modify": {
-        "get": {
-          "summary": "订正编码",
-          "description": "",
-          "tags": [
-            "默认分类"
-          ],
-          "parameters": [],
-          "responses": {
-            "200": {
-              "description": "成功",
-              "content": {
-                "application/json": {
-                  "schema": {
-                    "type": "object",
-                    "properties": {}
-                  },
-                  "examples": {}
-                }
+                  "properties": {}
+                },
+                "examples": {}
               }
             }
           }
         }
       }
     },
-    "components": {
-      "schemas": {}
+    "/charset/list": {
+      "get": {
+        "summary": "获取全部字符集的列表",
+        "description": "",
+        "tags": [
+          "字符集"
+        ],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "",
+            "required": false,
+            "example": "Bearer {{accessToken}}",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "cid": {
+                        "type": "integer",
+                        "title": "ID",
+                        "description": "字符集ID"
+                      },
+                      "name": {
+                        "type": "string",
+                        "title": "字符集名称"
+                      }
+                    },
+                    "required": [
+                      "cid",
+                      "name"
+                    ]
+                  }
+                },
+                "examples": {}
+              }
+            }
+          }
+        }
+      }
+    },
+    "/charset/info": {
+      "get": {
+        "summary": "获取字符集详细信息",
+        "description": "",
+        "tags": [
+          "字符集"
+        ],
+        "parameters": [
+          {
+            "name": "cid",
+            "in": "query",
+            "description": "",
+            "required": true,
+            "example": "1",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "",
+            "required": false,
+            "example": "Bearer {{accessToken}}",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "desc": {
+                      "type": "string",
+                      "title": "描述"
+                    },
+                    "set": {
+                      "type": "string",
+                      "title": "字符",
+                      "description": "包含的全部字符"
+                    }
+                  },
+                  "required": [
+                    "desc",
+                    "set"
+                  ]
+                },
+                "examples": {}
+              }
+            }
+          }
+        }
+      }
+    },
+    "/file/preview": {
+      "get": {
+        "summary": "预览文件",
+        "description": "",
+        "tags": [
+          "文件"
+        ],
+        "parameters": [
+          {
+            "name": "fid",
+            "in": "query",
+            "description": "",
+            "required": false,
+            "example": "123",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "",
+            "required": true,
+            "example": "Bearer {{accessToken}}",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "object",
+                  "properties": {}
+                },
+                "examples": {}
+              }
+            }
+          }
+        }
+      }
+    },
+    "/encoding/baseinfo": {
+      "post": {
+        "summary": "设定基础信息",
+        "description": "",
+        "tags": [
+          "编码"
+        ],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "",
+            "required": true,
+            "example": "Bearer {{accessToken}}",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "target": {
+                    "type": "string",
+                    "title": "目标编码",
+                    "enum": [
+                      "utf8",
+                      "bgk"
+                    ],
+                    "x-apifox": {
+                      "enumDescriptions": {
+                        "utf8": "UTF-8编码",
+                        "bgk": "GBK编码"
+                      }
+                    }
+                  },
+                  "selected": {
+                    "type": "array",
+                    "items": {
+                      "type": "integer"
+                    },
+                    "title": "需要进行转码的文件"
+                  },
+                  "unselected": {
+                    "type": "array",
+                    "items": {
+                      "type": "integer"
+                    },
+                    "title": "不需要转码的文件"
+                  },
+                  "charset": {
+                    "type": "array",
+                    "items": {
+                      "type": "integer"
+                    },
+                    "title": "字符集"
+                  }
+                },
+                "required": [
+                  "target",
+                  "selected",
+                  "unselected",
+                  "charset"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "name": {
+                        "type": "string",
+                        "title": "文件名"
+                      },
+                      "encoding": {
+                        "type": "string",
+                        "title": "源编码格式",
+                        "enum": [
+                          "utf8",
+                          "gbk"
+                        ],
+                        "x-apifox": {
+                          "enumDescriptions": {
+                            "utf8": "UTF-8编码",
+                            "gbk": "GBK编码"
+                          }
+                        }
+                      }
+                    },
+                    "required": [
+                      "name",
+                      "encoding"
+                    ]
+                  }
+                },
+                "examples": {}
+              }
+            }
+          }
+        }
+      }
+    },
+    "/file/download": {
+      "get": {
+        "summary": "下载全部文件",
+        "description": "",
+        "tags": [
+          "文件"
+        ],
+        "parameters": [
+          {
+            "name": "Auth",
+            "in": "query",
+            "description": "",
+            "required": true,
+            "example": "Bearer {{accessToken}}",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "object",
+                  "properties": {}
+                },
+                "examples": {}
+              }
+            }
+          }
+        }
+      }
+    },
+    "/file/upload": {
+      "post": {
+        "summary": "上传文件",
+        "description": "似乎暂时无法运行正确的测试",
+        "tags": [
+          "文件"
+        ],
+        "parameters": [
+          {
+            "name": "Content-Type",
+            "in": "header",
+            "description": "",
+            "required": true,
+            "example": "multipart/form-data",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "",
+            "required": true,
+            "example": "Bearer {{accessToken}}",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "files": {
+                    "type": "string",
+                    "example": [
+                      "file://D:\\Projects\\SnowPhoenix\\Projects\\ToolSetEncodeTransformer\\src\\main\\resources\\static\\files\\gbk.txt",
+                      "file://D:\\Projects\\SnowPhoenix\\Projects\\ToolSetEncodeTransformer\\src\\main\\resources\\static\\files\\sub\\text1.txt"
+                    ],
+                    "format": "binary"
+                  }
+                },
+                "required": [
+                  "files"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "selected": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "name": {
+                            "type": "string",
+                            "title": "文件名"
+                          },
+                          "fid": {
+                            "type": "integer",
+                            "title": "文件id"
+                          }
+                        },
+                        "description": "将被转码的文件",
+                        "required": [
+                          "name",
+                          "fid"
+                        ]
+                      }
+                    },
+                    "unselected": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "name": {
+                            "type": "string",
+                            "title": "文件名"
+                          },
+                          "fid": {
+                            "type": "integer",
+                            "title": "文件id"
+                          }
+                        },
+                        "description": "将被排除的文件",
+                        "required": [
+                          "name",
+                          "fid"
+                        ]
+                      }
+                    }
+                  },
+                  "required": [
+                    "selected",
+                    "unselected"
+                  ]
+                },
+                "examples": {}
+              }
+            }
+          }
+        }
+      }
     }
+  },
+  "components": {
+    "schemas": {}
   }
+}
