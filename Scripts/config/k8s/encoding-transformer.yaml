@@ -1,0 +1,70 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: encoding-transformer
+  namespace: toolset
+  annotations:
+    configmap.reloader.stakater.com/reload: "encoding-transformer-cm"
+spec:
+  selector:
+    matchLabels:
+      app: encoding-transformer
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: encoding-transformer
+    spec:
+      volumes:
+        - name: config
+          configMap:
+            name: encoding-transformer-cm
+      containers:
+      - name: encoding-transformer
+        image: snowphoenix/encode-transformer
+        command:
+          - "--spring.config.location=/user/share/usercenter/application.yaml"
+        resources:
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
+          requests:
+            memory: "128Mi"
+            cpu: "500m"
+        ports:
+        - containerPort: 80
+        volumeMounts:
+          - name: config
+            mountPath: /user/share/usercenter
+            subPath: application.yaml
+        readinessProbe:
+          httpGet:
+            port: 80
+            path: /helth/get
+          initialDelaySeconds: 10
+          timeoutSeconds: 1
+          periodSeconds: 10
+          successThreshold: 1
+          failureThreshold: 5
+        livenessProbe:
+          httpGet:
+            port: 80
+            path: /helth/get
+          timeoutSeconds: 2
+          periodSeconds: 30
+          successThreshold: 1
+          failureThreshold: 3
+          
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: encoding-transformer
+  namespace: toolset
+spec:
+  selector:
+    app: encoding-transformer
+  ports:
+  - port: 8001
+    targetPort: 80

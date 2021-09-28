@@ -1,0 +1,21 @@
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/toolsetencodingtrans?useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC
+    username: toolsetencodingtrans
+    password: encodingtrans
+  redis:
+    host: redis
+    port: 6379
+server:
+  port: 80
+jwt:
+  public-key-path: /usr/share/encoding/pem/pub.pem
+files:
+  transformed-dir: /usr/share/encoding/workDir/transformed
+  origin-dir: /usr/share/encoding/workDir/origin
+charset:
+  file-path:
+    common3500: /usr/share/encoding/charSet/common3500.txt
+    common7000: /usr/share/encoding/charSet/common7000.txt
+redis:
+  timeout-minute: 30

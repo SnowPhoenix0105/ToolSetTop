@@ -18,7 +18,7 @@ def config_logging(file, console_level: int=logging.INFO, file_level: int=loggin
     logging.setLogRecordFactory(factory)
 
     t = time.strftime("%Y_%m_%d", time.localtime(time.time()))
-    file_handler = logging.FileHandler(pcat(Path.SCRIPTS_LOGS, f"{t}.log"), mode='a', encoding="utf8")
+    file_handler = logging.FileHandler(pcat(Path.SCRIPTS_DATA_LOGS, f"{t}.log"), mode='a', encoding="utf8")
     file_handler.setFormatter(logging.Formatter(
         '%(asctime)s [%(shortlevelname)s] %(module)s.%(lineno)d %(name)s:\t%(message)s'
         ))
