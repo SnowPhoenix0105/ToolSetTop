@@ -1,0 +1,70 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: user-center
+  namespace: toolset
+  annotations:
+    configmap.reloader.stakater.com/reload: "user-center-cm"
+spec:
+  selector:
+    matchLabels:
+      app: user-center
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: user-center
+    spec:
+      volumes:
+        - name: config
+          configMap:
+            name: user-center-cm
+      containers:
+      - name: user-center
+        image: snowphoenix/toolset_usercenter
+        command:
+          - "--spring.config.location=/user/share/usercenter/application.yaml"
+        resources:
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
+          requests:
+            memory: "128Mi"
+            cpu: "500m"
+        ports:
+        - containerPort: 80
+        volumeMounts:
+          - name: config
+            mountPath: /user/share/usercenter
+            subPath: application.yaml
+        readinessProbe:
+          httpGet:
+            port: 80
+            path: /helth/get
+          initialDelaySeconds: 10
+          timeoutSeconds: 1
+          periodSeconds: 10
+          successThreshold: 1
+          failureThreshold: 5
+        livenessProbe:
+          httpGet:
+            port: 80
+            path: /helth/get
+          timeoutSeconds: 2
+          periodSeconds: 30
+          successThreshold: 1
+          failureThreshold: 3
+          
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: user-center
+  namespace: toolset
+spec:
+  selector:
+    app: user-center
+  ports:
+  - port: 8001
+    targetPort: 80
