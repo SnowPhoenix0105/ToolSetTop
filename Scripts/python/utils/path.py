@@ -30,6 +30,7 @@ class Path:
     SCRIPTS_CONFIG_SPRING = pcat(SCRIPTS_CONFIG, "spring")
     SCRIPTS_CONFIG_K8S = pcat(SCRIPTS_CONFIG, "k8s")
     SCRIPTS_CONFIG_K8S_THIRD_PARTY_LIST = pcat(SCRIPTS_CONFIG, "k8s_third_party_list.json")
+    SCRIPTS_CONFIG_OTHER = pcat(SCRIPTS_CONFIG, "others")
 
 if __name__ == '__main__':
     print(Path.SCRIPTS)

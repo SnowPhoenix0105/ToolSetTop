@@ -5,7 +5,7 @@ metadata:
   name: encoding-transformer
   namespace: toolset
   annotations:
-    configmap.reloader.stakater.com/reload: "encoding-transformer-cm"
+    configmap.reloader.stakater.com/reload: "encoding-transformer-cm,rsa-secret,encoding-transformer-charset"
 spec:
   selector:
     matchLabels:
@@ -20,28 +20,43 @@ spec:
         - name: config
           configMap:
             name: encoding-transformer-cm
+        - name: charset
+          configMap:
+            name: encoding-transformer-charset
+        - name: rsa
+          secret:
+            secretName: rsa-secret
+            items:
+              - key: pub.pem
+                path: pub.pem
       containers:
       - name: encoding-transformer
-        image: snowphoenix/encode-transformer
-        command:
-          - "--spring.config.location=/user/share/usercenter/application.yaml"
+        image: snowphoenix/toolset_encodetransformer
+        args:
+          - "java"
+          - "-jar"
+          - "/usr/local/ToolSetEncodeTransformer.jar"
+          - "--spring.config.location=/usr/share/encoding/application.yaml"
         resources:
           limits:
-            memory: "128Mi"
+            memory: "256Mi"
             cpu: "500m"
           requests:
             memory: "128Mi"
-            cpu: "500m"
+            cpu: "100m"
         ports:
         - containerPort: 80
         volumeMounts:
           - name: config
-            mountPath: /user/share/usercenter
-            subPath: application.yaml
+            mountPath: /usr/share/encoding
+          - name: charset
+            mountPath: /usr/share/encoding/charSet
+          - name: rsa
+            mountPath: /usr/share/encoding/pem
         readinessProbe:
           httpGet:
             port: 80
-            path: /helth/get
+            path: /health/get
           initialDelaySeconds: 10
           timeoutSeconds: 1
           periodSeconds: 10
@@ -50,7 +65,7 @@ spec:
         livenessProbe:
           httpGet:
             port: 80
-            path: /helth/get
+            path: /health/get
           timeoutSeconds: 2
           periodSeconds: 30
           successThreshold: 1
@@ -65,6 +80,7 @@ metadata:
 spec:
   selector:
     app: encoding-transformer
+  type: NodePort
   ports:
   - port: 9002
     targetPort: 80

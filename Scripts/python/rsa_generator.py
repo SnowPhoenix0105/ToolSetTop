@@ -18,4 +18,4 @@ def generate(target_dir: str):
 
 if __name__ == '__main__':
     config_logging(__name__, logging.DEBUG)
-    generate(Path.SCRIPTS_PEM)
+    generate(Path.SCRIPTS_DATA_PEM)

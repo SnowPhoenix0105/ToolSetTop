@@ -5,7 +5,7 @@ metadata:
   name: user-center
   namespace: toolset
   annotations:
-    configmap.reloader.stakater.com/reload: "user-center-cm"
+    configmap.reloader.stakater.com/reload: "user-center-cm,rsa-secret"
 spec:
   selector:
     matchLabels:
@@ -20,28 +20,44 @@ spec:
         - name: config
           configMap:
             name: user-center-cm
+        - name: rsa
+          secret:
+            secretName: rsa-secret
+            items:
+              - key: pub.pem
+                path: pub.pem
+              - key: pri.pkcs8.pem
+                path: pri.pkcs8.pem
       containers:
       - name: user-center
         image: snowphoenix/toolset_usercenter
         command:
-          - "--spring.config.location=/user/share/usercenter/application.yaml"
+          # - "ls"
+          # - "/usr/share/usercenter"
+          # - "cat"
+          # - "/usr/share/usercenter/pem/pub.pem"
+          - "java"
+          - "-jar"
+          - "/usr/local/ToolSetUserCenter.jar"
+          - "--spring.config.location=/usr/share/usercenter/application.yaml"
         resources:
           limits:
-            memory: "128Mi"
+            memory: "256Mi"
             cpu: "500m"
           requests:
             memory: "128Mi"
-            cpu: "500m"
+            cpu: "100m"
         ports:
         - containerPort: 80
         volumeMounts:
           - name: config
-            mountPath: /user/share/usercenter
-            subPath: application.yaml
+            mountPath: /usr/share/usercenter
+          - name: rsa
+            mountPath: /usr/share/usercenter/pem
         readinessProbe:
           httpGet:
             port: 80
-            path: /helth/get
+            path: /health/get
           initialDelaySeconds: 10
           timeoutSeconds: 1
           periodSeconds: 10
@@ -50,7 +66,7 @@ spec:
         livenessProbe:
           httpGet:
             port: 80
-            path: /helth/get
+            path: /health/get
           timeoutSeconds: 2
           periodSeconds: 30
           successThreshold: 1
@@ -65,6 +81,7 @@ metadata:
 spec:
   selector:
     app: user-center
+  type: NodePort
   ports:
   - port: 9002
     targetPort: 80

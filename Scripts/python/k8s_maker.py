@@ -12,8 +12,7 @@ class Setting:
         self.database = "localhost:3306"
 
     def produce_spring_config(self, yaml: List[str]) -> List[str]:
-        return [line.replace("localhost:3306", self.database) 
-            for line in yaml]
+        return list(map(lambda line: line.replace("localhost:3306", self.database), yaml))
     
     def report(self, logger: logging.Logger, prefix=""):
         logger.info(f"{prefix}databass={self.database}")
@@ -27,7 +26,7 @@ class Setting:
     def of_json(json_str: str):
         ret = Setting()
         try:
-            json_dict = json.loads(ret)
+            json_dict = json.loads(json_str)
             if "database" in json_dict:
                 ret.database = json_dict["database"]
         except:
@@ -65,12 +64,12 @@ def _application_to_cm(name: str, lines: List[str]) -> str:
 apiVersion: v1
 metadata:
   name: {name}-cm
-  namespace: tool-set
+  namespace: toolset
 data:
   application.yaml: |-
     {content}
     """
-    return header + content
+    return header
 
 def _make_cm_for_spring(src: str, dst: str, setting: Setting):
     yamls = os.listdir(src)

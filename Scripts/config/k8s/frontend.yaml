@@ -23,7 +23,7 @@ spec:
             cpu: "500m"
           requests:
             memory: "128Mi"
-            cpu: "500m"
+            cpu: "100m"
         ports:
         - containerPort: 80
         readinessProbe:
@@ -52,6 +52,7 @@ metadata:
 spec:
   selector:
     app: frontend
+  type: NodePort
   ports:
   - port: 80
     targetPort: 80

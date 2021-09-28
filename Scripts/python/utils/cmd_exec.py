@@ -26,7 +26,9 @@ class TextReadLineThread(threading.Thread):
 def cmd_exec(command: str, ensure_success: bool=True) -> int:
     _logger.info("executing command: {}".format(command))
 
-    cmd = shlex.split(command)
+    cmd = command # shlex.split(command)
+
+    # _logger.debug(f"cmd={cmd}")
 
     process = subprocess.Popen(
         cmd,
@@ -62,4 +64,4 @@ def cmd_exec(command: str, ensure_success: bool=True) -> int:
 
 if __name__ == '__main__':
     config_logging(__file__, logging.DEBUG)
-    cmd_exec("ping localhost", ensure_success=False)
+    cmd_exec("ping 127.0.0.1", ensure_success=False)

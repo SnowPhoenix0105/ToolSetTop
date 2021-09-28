@@ -39,11 +39,11 @@ spec:
           - "/user/local/redis/redis.conf"
         resources:
           limits:
-            memory: "128Mi"
-            cpu: "500m"
+            memory: "256Mi"
+            cpu: "200m"
           requests:
             memory: "128Mi"
-            cpu: "500m"
+            cpu: "100m"
         ports:
         - containerPort: 6379
         volumeMounts:

@@ -19,7 +19,7 @@ def setup_k8s_thirdparty():
         cmd = third_party_package["cmd"]
         desc = third_party_package["desc"]
         _logger.info(f"deploying {name}: {desc}")
-        cmd_exec(cmd)
+        cmd_exec(cmd, False)
 
 
 if __name__ == '__main__':
